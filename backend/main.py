@@ -13,26 +13,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Allow frontend to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://financial-sentinel-8qpe.vercel.app"],  # Tighten this in production
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# ── Models ────────────────────────────────────────────────────────────────────
-
 class UTRRequest(BaseModel):
     utr: str
 
 class StatusResponse(BaseModel):
-    status: str                    # GREEN | YELLOW | RED
+    status: str
     headline: str
     subtext: str
-    refund_message: Optional[str]
+    refund_message: Optional[str] = None
     utr: str
     amount: str
     merchant: str
@@ -40,18 +37,16 @@ class StatusResponse(BaseModel):
     payer_bank: str
     txn_status: str
     institution: str
-    rbi_deadline: Optional[str]
-    days_left: Optional[int]
+    rbi_deadline: Optional[str] = None
+    days_left: Optional[int] = None
     found: bool
 
 class OCRResponse(BaseModel):
-    utr: Optional[str]
+    utr: Optional[str] = None
     confidence: float
     found: bool
-    error: Optional[str]
+    error: Optional[str] = None
 
-
-# ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.get("/")
 def root():
@@ -65,10 +60,6 @@ def health():
 
 @app.post("/check-utr", response_model=StatusResponse)
 def check_utr(request: UTRRequest):
-    """
-    Look up a UTR number and return the pay-again status.
-    Returns GREEN, YELLOW, or RED with full transaction context.
-    """
     utr = request.utr.strip()
 
     if not utr.isdigit() or len(utr) != 12:
@@ -83,7 +74,7 @@ def check_utr(request: UTRRequest):
         return StatusResponse(
             status="UNKNOWN",
             headline="UTR not found.",
-            subtext="We could not find this transaction in our system. Please check the UTR number and try again.",
+            subtext="We could not find this transaction. Please check the UTR number and try again.",
             refund_message=None,
             utr=utr,
             amount="Unknown",
@@ -102,21 +93,17 @@ def check_utr(request: UTRRequest):
 
 @app.post("/ocr-scan", response_model=OCRResponse)
 async def ocr_scan(file: UploadFile = File(...)):
-    """
-    Accept a screenshot upload, run OCR, and extract the UTR number.
-    Supports JPG, PNG, PDF.
-    """
     allowed_types = ["image/jpeg", "image/png", "image/jpg", "application/pdf"]
 
     if file.content_type not in allowed_types:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file type: {file.content_type}. Please upload JPG, PNG, or PDF."
+            detail=f"Unsupported file type. Please upload JPG, PNG, or PDF."
         )
 
     contents = await file.read()
 
-    if len(contents) > 10 * 1024 * 1024:  # 10MB limit
+    if len(contents) > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large. Maximum size is 10MB.")
 
     result = extract_utr_from_image(contents, file.content_type)
@@ -125,10 +112,6 @@ async def ocr_scan(file: UploadFile = File(...)):
 
 @app.get("/disputes")
 def get_disputes():
-    """
-    Return mock dispute list for the dashboard.
-    In production this would query a database filtered by user session.
-    """
     return {
         "disputes": [
             {
