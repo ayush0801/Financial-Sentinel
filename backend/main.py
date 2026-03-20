@@ -16,7 +16,7 @@ app = FastAPI(
 # Allow frontend to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Tighten this in production
+    allow_origins=["https://financial-sentinel-8qpe.vercel.app"],  # Tighten this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
