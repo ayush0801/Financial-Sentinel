@@ -136,7 +136,7 @@ VITE_API_URL=http://localhost:8000
 | Backend API | [financial-sentinel-backend.onrender.com/docs](https://financial-sentinel-backend.onrender.com/docs) |
 | Full PRD | [PRD.md](./PRD.md) |
 | Figma Prototype | [View on Figma Community](https://www.figma.com/community/file/1617089372118422150) |
-| Medium Write-up | _Coming soon_ |
+| Medium Write-up | [Read on Medium](https://medium.com/@ayush.jha.0801/i-built-a-tool-that-tells-you-whether-to-pay-again-after-a-failed-upi-transaction-95e8c4b4a74a) |
 
 ---
 
