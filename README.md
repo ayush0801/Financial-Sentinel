@@ -148,9 +148,16 @@ RBI TAT mandates referenced in this product are sourced from RBI circular **DPSS
 
 ## Why I Built This
 
-I spent two years as a Product Manager at ICICI Bank building digital financial products, including transaction monitoring systems for compliance. Failed UPI payments came up constantly in user research, in ops escalations, and in regulatory discussions. Every time, the answer was the same: the user has no visibility and no tools.
+Most Indians have been there. You are at a medical store, a restaurant, or a petrol pump. You scan the QR code, enter your PIN, and the app returns "failed" or "pending." The merchant is waiting. There is a queue behind you. You have no idea if the money left your account or not.
 
-This project is an attempt to fix that.
+You call customer care. You get a ticket number. You wait.
+
+This happens tens of millions of times every month across India. UPI processes over 17 billion transactions a month, and even at a sub-1% failure rate that is a staggering number of people left confused, anxious, and without any guidance on the single most important question in that moment: is it safe to pay again?
+
+No bank app answers this. No payment app answers this. The information exists in the system — it is just never surfaced to the person who needs it most.
+
+Financial Sentinel is an attempt to fix that.
+
 
 ---
 
